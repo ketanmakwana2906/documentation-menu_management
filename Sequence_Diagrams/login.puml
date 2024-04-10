@@ -1,0 +1,29 @@
+@startuml LoginProcess
+title Login process
+
+actor User
+participant "Html Page" as html
+participant "AngularJs controller" as js
+participant "C# api controller" as api
+database "Sql Server" as db
+database localstorage as s
+
+User -> html: Click on Login
+html --> User: Provide login Form
+User -> html: Enter Login Credentials and click on login
+html -> js : pass login data
+js -> api : validate data and pass data
+api -> db : call verifylogin stored procedure
+db --> api : return user object if valid user
+api --> js : return user verification status
+js --> User : redirect to select role if user valid
+User -> html : select Role and click on submit
+html -> js : pass role data
+js -> api : call api method for verification
+api -> db : call sp for verification
+db --> api : return user-role verification status
+api --> js : return user-role verification status
+js -> s : store user-role data in localstorage if valid
+js --> User : redirect to user account
+
+@enduml
