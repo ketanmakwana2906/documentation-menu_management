@@ -1,0 +1,35 @@
+@startuml UserRoleMap
+title Map Roles with User
+
+actor User
+participant "Html Page" as html
+participant "AngularJs controller" as js
+participant "C# api controller" as api
+database "Sql Server" as db
+
+alt User clicks on "Map Roles With User"
+    User -> html: Map Roles With User
+    html -> User : provide UserRoleMap form
+    User -> html : fill details(UserName,RoleName,Designation,institute,department,universitySection)
+    User -> html : click on add
+    html -> js : pass UserRoleMap object using two way data binding
+    js -> js : validate data
+    js -> api : call api for add UserRoleMap
+    api -> db : call sp for add UserRoleMap
+    db -> api : return status of add UserRoleMap
+    api -> js : return status of add UserRoleMap
+    js -> User : show message of add UserRoleMap Status
+
+else Admin clicks on "delete UserRoleMap"
+    html -> js: pass Id of requested UserRoleMap for delete
+    js -> html: pass data of that UserRoleMap
+    html --> Role : show UserRoleMap Delete alert
+    Role -> html: click on yes or no
+    js -> api : if yes then call api method for delete , otherwise rollback
+    api -> db : call sp for delete data
+    db -> api : return delete status message
+    api -> js : return delete status message
+    js --> Role : show status message of delete
+end
+
+@enduml

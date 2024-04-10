@@ -1,0 +1,22 @@
+@startuml StrictRouting
+title Strict Routing process
+
+actor User
+participant "Html Page" as html
+participant "AngularJs controller" as js
+participant "C# api controller" as api
+database "Sql Server" as db
+database localstorage as s
+
+js ->s: get data of user-role
+js -> api: call api method GetPermissionByUserRole
+api -> db : call sp
+db -> api : return allowed MenuItem as per User-role
+api -> js :  return allowed MenuItem object
+js -> js : create allowedstates object
+User -> html: try to access unauthorized url
+js --> js: when state changed keep watch one changed state
+js -> User :redirect to PageNotfound if state not found in allowedstate and state directly changed by URL bar
+
+
+@enduml

@@ -1,0 +1,43 @@
+@startuml Map MenuItems with Users
+title Map MenuItems with Users
+
+actor "Admin" as User
+participant "Html Page" as html
+participant "Jstree" as jt
+participant "AngularJs controller" as js
+participant "C# api controller" as api
+database "Sql Server" as db
+
+
+   User -> html : go to this mapping URL
+   js -> api : call api method for get User List
+   api -> db : call sp
+   db -> api : return UserList
+   api -> js : return UserList
+   Js -> User : Show List of Users
+   User -> html : select User for update MenuItem for that User
+   html -> js : pass selected nodes of Users
+   js -> api : call  api for get RoleList of selected User
+   api -> db : call sp
+   db -> api : return Roles of selected User
+   api -> js: return RoleList
+   js -> User: show Role as per selected User
+   User -> html : select Role
+   html -> js : pass selected data through two way binding
+   js -> api : call api with selected User-Role
+   api -> db : call sp for get MenuItem tree as per selected User-Role
+   db -> api : return MenuItems
+   api -> js : return MenuItem tree as per selected User-Role
+   js -> jt : pass json object of MenuItem
+   jt -> html : load tree structure of MenuItem
+   User -> html : check/uncheck MenuItem from tree
+   User -> html : update data
+   jt -> js: pass selected User,MenuItems nodes
+   js ->api: call api for update/add data to database
+   api -> db : call sp
+   db ->api: return status
+   api -> js : return status
+   js -> User: show status
+
+
+@enduml

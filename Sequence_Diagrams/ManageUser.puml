@@ -1,0 +1,49 @@
+@startuml ManageUser
+title Manage Users
+
+actor "Admin" as User
+participant "Html Page" as html
+participant "AngularJs controller" as js
+participant "C# api controller" as api
+database "Sql Server" as db
+
+User -> html : want to use "Manage Users Module"
+
+alt User clicks on "Add New User" button
+    User -> html: Click on "Add New User" Button
+    html -> User : provide User details form
+    User -> html : fill User details(UserName,Password,Email,mobileNo,DisplayName,otp required or not)
+    User -> html : click on add User
+    html -> js : pass User object using two way data binding
+    js -> js : validate data using regex
+    js -> api : call api for add user
+    api -> db : call sp for add user
+    db -> api : return status of add user
+    api -> js : return status of add user
+    js -> User : show message of add User Status
+
+else Admin clicks on "update User"
+    html -> js: pass Id of requested User for update
+    js -> html: pass data of that User
+    html --> User : show User update form with old pre-filled data
+    User -> html: fill form with updated data and click on update
+    html -> js : pass updated data object
+    js -> api : validate data and call api method
+    api -> db : call sp for update data
+    db -> api : return update status message
+    api -> js : return update status message
+    js --> User : show status message of update
+
+else Admin clicks on "delete User"
+    html -> js: pass Id of requested User for update
+    js -> html: pass data of that User
+    html --> User : show User Delete alert
+    User -> html: click on yes or no
+    js -> api : if yes then call api method for delete , otherwise rollback
+    api -> db : call sp for delete data
+    db -> api : return delete status message
+    api -> js : return delete status message
+    js --> User : show status message of delete
+end
+
+@enduml

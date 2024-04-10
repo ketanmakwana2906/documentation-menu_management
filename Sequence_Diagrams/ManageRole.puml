@@ -1,0 +1,49 @@
+@startuml ManageRole
+title Manage Roles
+
+actor "Admin" as Role
+participant "Html Page" as html
+participant "AngularJs controller" as js
+participant "C# api controller" as api
+database "Sql Server" as db
+
+Role -> html : want to use "Manage Roles Module"
+
+alt Role clicks on "Add New Role" button
+    Role -> html: Click on "Add New Role" Button
+    html -> Role : provide Role details form
+    Role -> html : fill Role details(RoleName)
+    Role -> html : click on add Role
+    html -> js : pass Role object using two way data binding
+    js -> js : validate data using regex
+    js -> api : call api for add Role
+    api -> db : call sp for add Role
+    db -> api : return status of add Role
+    api -> js : return status of add Role
+    js -> Role : show message of add Role Status
+
+else Admin clicks on "update Role"
+    html -> js: pass Id of requested Role for update
+    js -> html: pass data of that Role
+    html --> Role : show Role update form with old pre-filled data
+    Role -> html: fill form with updated data and click on update
+    html -> js : pass updated data object
+    js -> api : validate data and call api method
+    api -> db : call sp for update data
+    db -> api : return update status message
+    api -> js : return update status message
+    js --> Role : show status message of update
+
+else Admin clicks on "delete Role"
+    html -> js: pass Id of requested Role for delete
+    js -> html: pass data of that Role
+    html --> Role : show Role Delete alert
+    Role -> html: click on yes or no
+    js -> api : if yes then call api method for delete , otherwise rollback
+    api -> db : call sp for delete data
+    db -> api : return delete status message
+    api -> js : return delete status message
+    js --> Role : show status message of delete
+end
+
+@enduml

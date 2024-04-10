@@ -1,0 +1,39 @@
+@startuml DynamicSideNav
+title show Dynamic SideNav as per User-Role
+
+actor User
+participant "Html Page" as html
+participant "AngularJs controller" as js
+participant "C# api controller" as api
+database "Sql Server" as db
+database localstorage as s
+
+
+js -> s : get user and role detail
+js -> api : call GetPermissionByUserRole api method
+api -> db : call GetPermissionByUserRole sp
+db -> api : return assigned MenuItem object
+api -> js : return MenuItem object of user-role
+js -> js : organize MenuItem list in proper format 
+js -> html : load MenuItem levelwise from organized object
+html -> User : provide dynamic sidenavbar
+
+alt User acess MenuItem Levelwise by toggle
+    User -> html: click on toggle for view child/grand child of item
+    html -> js: toggle show variable
+    js -> html: load item as per toggle variable
+    html -> User : show item levelwise as per toggle
+
+else User search MenuItem
+    User -> html: type keyword in search input
+    html -> js: call filter method
+    js -> html: return filterd items
+    html -> User: show filterd item
+
+else User go on PageUrl of MenuItem
+    User -> html: Click on MenuItem
+    html -> js: call angularJs state
+    js -> User: redirect to PageUrl with html page content of state
+end
+
+@enduml

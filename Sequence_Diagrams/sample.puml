@@ -1,0 +1,36 @@
+@startuml AdminAuthentication
+title Login process
+
+actor User
+participant "Authentication Module" as AuthModule
+database Backend
+database Session
+participant "Dashboard" as Dashboard
+
+User -> AuthModule: Click on Login
+AuthModule --> User: Provide Authentication Form
+User -> AuthModule: Enter Login Credentials
+
+alt User clicks on "Login as Admin" button
+    User -> AuthModule: Click on "Login as Admin" Button
+    AuthModule -> Backend: Verify Admin Credentials
+    Backend -> AuthModule: Admin Credentials Valid
+    AuthModule -> Session: Set Role as Admin
+    AuthModule -> Dashboard: Open Admin Dashboard
+
+else User clicks on "Login as Accountant" button
+    User -> AuthModule: Click on "Login as Accountant" Button
+    AuthModule -> Backend: Verify Accountant Credentials
+    Backend -> AuthModule: Accountant Credentials Valid
+    AuthModule -> Session: Set Role as Accountant
+    AuthModule -> Dashboard: Open Accountant Dashboard
+
+else User clicks on "Login as Vendor" button
+    User -> AuthModule: Click on "Login as Vendor" Button
+    AuthModule -> Backend: Verify Vendor Credentials
+    Backend -> AuthModule: Vendor Credentials Valid
+    AuthModule -> Session: Set Role as Vendor
+    AuthModule -> Dashboard: Open Vendor Dashboard
+end
+
+@enduml
